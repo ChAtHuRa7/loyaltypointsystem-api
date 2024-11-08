@@ -1,17 +1,17 @@
 package com.abc.loyaltypointsystem.servicers;
 
-import com.abc.loyaltypointsystem.dtos.AddPointRequestDto;
+import com.abc.loyaltypointsystem.dtos.PointUpdateRequestDto;
 import com.abc.loyaltypointsystem.dtos.CustomerCreateRequestDto;
 import com.abc.loyaltypointsystem.entity.Customer;
 import com.abc.loyaltypointsystem.exceptions.CustomerAlreadyExistsException;
 import com.abc.loyaltypointsystem.exceptions.CustomerNotFoundException;
+import com.abc.loyaltypointsystem.exceptions.NotEnoughPointsException;
 import com.abc.loyaltypointsystem.repository.CustomerRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +37,28 @@ public class CustomerService {
         customerRepository.save(newCustomer);
     }
 
-    public void addPoints(AddPointRequestDto addPointRequestDto, long customerId) {
+    public void addPoints(PointUpdateRequestDto pointUpdateRequestDto, long customerId) {
 
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with this Id not found."));
-        customer.setPoints(customer.getPoints() + addPointRequestDto.getPoints());
+        customer.setPoints(customer.getPoints() + pointUpdateRequestDto.getPoints());
         customerRepository.save(customer);
     }
 
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    public void redeemPoints(@Valid PointUpdateRequestDto pointUpdateRequestDto, long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
+
+
+        if(customer.getPoints() < pointUpdateRequestDto.getPoints()){
+            throw new NotEnoughPointsException("Not enough points to redeem");
+        }
+
+        customer.setPoints(customer.getPoints() - pointUpdateRequestDto.getPoints());
+        customerRepository.save(customer);
     }
 }

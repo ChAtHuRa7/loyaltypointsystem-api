@@ -1,6 +1,5 @@
 package com.abc.loyaltypointsystem.dtos;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddPointRequestDto {
+public class PointUpdateRequestDto {
 
     @PositiveOrZero(message = "customer Id points must be positive")
     private long customerId;

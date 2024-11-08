@@ -1,8 +1,8 @@
 package com.abc.loyaltypointsystem.controller;
 
 
-import com.abc.loyaltypointsystem.dtos.AddPointRequestDto;
 import com.abc.loyaltypointsystem.dtos.CustomerCreateRequestDto;
+import com.abc.loyaltypointsystem.dtos.PointUpdateRequestDto;
 import com.abc.loyaltypointsystem.entity.Customer;
 import com.abc.loyaltypointsystem.servicers.CustomerService;
 import jakarta.validation.Valid;
@@ -32,9 +32,15 @@ public class CustomerController {
     }
 
     @PostMapping("/{cId}/points")
-    public ResponseEntity<String> addPoints(@RequestBody @Valid AddPointRequestDto addPointRequestDto, @PathVariable("cId") long customerId){
-        customerService.addPoints(addPointRequestDto, customerId);
+    public ResponseEntity<String> addPoints(@RequestBody @Valid PointUpdateRequestDto pointUpdateRequestDto, @PathVariable("cId") long customerId){
+        customerService.addPoints(pointUpdateRequestDto, customerId);
         return new ResponseEntity<>("Points Added successfully.", HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/{cId}/redeem")
+    public ResponseEntity<String> redeemPoints(@RequestBody @Valid PointUpdateRequestDto pointUpdateRequestDto, @PathVariable("cId") long customerId){
+        customerService.redeemPoints(pointUpdateRequestDto, customerId);
+        return new ResponseEntity<>("Points redeem successfully.", HttpStatus.ACCEPTED);
     }
 
 }
