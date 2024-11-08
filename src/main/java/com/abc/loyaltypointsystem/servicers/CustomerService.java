@@ -7,8 +7,10 @@ import com.abc.loyaltypointsystem.exceptions.CustomerAlreadyExistsException;
 import com.abc.loyaltypointsystem.exceptions.CustomerNotFoundException;
 import com.abc.loyaltypointsystem.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,5 +43,9 @@ public class CustomerService {
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with this Id not found."));
         customer.setPoints(customer.getPoints() + addPointRequestDto.getPoints());
         customerRepository.save(customer);
+    }
+
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
 }
