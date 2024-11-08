@@ -2,6 +2,7 @@ package com.abc.loyaltypointsystem.handler;
 
 
 import com.abc.loyaltypointsystem.exceptions.CustomerAlreadyExistsException;
+import com.abc.loyaltypointsystem.exceptions.CustomerNotFoundException;
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomerAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> handelException(CustomerAlreadyExistsException exp){
+        ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                .errorCode(HttpStatus.FORBIDDEN.value())
+                .errorDescription(exp.getMessage())
+                .build();
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handelException(CustomerNotFoundException exp){
         ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                 .errorCode(HttpStatus.FORBIDDEN.value())
                 .errorDescription(exp.getMessage())

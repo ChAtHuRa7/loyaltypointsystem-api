@@ -1,11 +1,15 @@
 package com.abc.loyaltypointsystem.servicers;
 
+import com.abc.loyaltypointsystem.dtos.AddPointRequestDto;
 import com.abc.loyaltypointsystem.dtos.CustomerCreateRequestDto;
 import com.abc.loyaltypointsystem.entity.Customer;
 import com.abc.loyaltypointsystem.exceptions.CustomerAlreadyExistsException;
+import com.abc.loyaltypointsystem.exceptions.CustomerNotFoundException;
 import com.abc.loyaltypointsystem.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +33,13 @@ public class CustomerService {
                 .build();
 
         customerRepository.save(newCustomer);
+    }
+
+    public void addPoints(AddPointRequestDto addPointRequestDto, long customerId) {
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer with this Id not found."));
+        customer.setPoints(customer.getPoints() + addPointRequestDto.getPoints());
+        customerRepository.save(customer);
     }
 }
