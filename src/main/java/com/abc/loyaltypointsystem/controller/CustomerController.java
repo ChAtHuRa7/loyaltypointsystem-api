@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/customers")
+@CrossOrigin
+@RequestMapping("api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService customerService;
 
     @PostMapping("")
-    public ResponseEntity<String> createCustomer(@RequestBody @Valid CustomerCreateRequestDto customerCreateRequestDto){
-        customerService.createCustomer(customerCreateRequestDto);
-        return new ResponseEntity<>("Customer created successfully.", HttpStatus.CREATED);
+    public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerCreateRequestDto customerCreateRequestDto){
+        Customer newCustomer = customerService.createCustomer(customerCreateRequestDto);
+        return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }
 
     @GetMapping("")

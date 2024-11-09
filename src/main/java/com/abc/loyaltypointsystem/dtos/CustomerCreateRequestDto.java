@@ -13,7 +13,7 @@ public class CustomerCreateRequestDto {
     @NotBlank(message = "Name is required")
     private String firstName;
 
-    private String LastName;
+    private String lastName;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Incorrect email format")

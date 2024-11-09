@@ -19,8 +19,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public void createCustomer(CustomerCreateRequestDto customerCreateRequestDto) {
-
+    public Customer createCustomer(CustomerCreateRequestDto customerCreateRequestDto) {
         if(customerRepository.findByEmail(customerCreateRequestDto.getEmail()).isPresent()){
             throw new CustomerAlreadyExistsException("Customer with the same email already exists.");
         }
@@ -34,11 +33,10 @@ public class CustomerService {
                 .points(0)
                 .build();
 
-        customerRepository.save(newCustomer);
+        return customerRepository.save(newCustomer);
     }
 
     public void addPoints(PointUpdateRequestDto pointUpdateRequestDto, long customerId) {
-
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with this Id not found."));
         customer.setPoints(customer.getPoints() + pointUpdateRequestDto.getPoints());
@@ -53,11 +51,9 @@ public class CustomerService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found."));
 
-
         if(customer.getPoints() < pointUpdateRequestDto.getPoints()){
             throw new NotEnoughPointsException("Not enough points to redeem");
         }
-
         customer.setPoints(customer.getPoints() - pointUpdateRequestDto.getPoints());
         customerRepository.save(customer);
     }
